@@ -124,7 +124,9 @@ def date_from_title(title):
 
 
 def clean_title(title, church_name):
-    """화면에 보일 짧은 제목: 교회 이름과 날짜를 빼고, 따옴표 속 설교 제목·설교자를 따로 뽑는다."""
+    """화면에 보일 짧은 제목과, 제목 안에 적힌 설교 제목·본문·설교자를 따로 뽑는다.
+    권장 유튜브 제목: 10월 18일 주일설교 "하나님의 일을 나타내시다" (요한복음 9:1-12) - 서대일 목사
+      → 표시 제목 '주일설교', 설교 제목 '하나님의 일을 나타내시다', 본문 '요한복음 9:1-12', 설교자 '서대일 목사'"""
     sermon_title = ""
     m = re.search(r"[\"“”'‘’]([^\"“”'‘’]{2,})[\"“”'‘’]", title)
     if m:
@@ -133,18 +135,26 @@ def clean_title(title, church_name):
     m = re.search(r"([가-힣]{2,4})\s*(목사|전도사)", title)
     if m:
         preacher = m.group(1) + " " + m.group(2)
+    scripture = ""
+    # 괄호 속 '성경책 장:절' (요한복음 9:1-12 / 요 9장 1-12절 / 출 15:26)
+    m = re.search(r"\(\s*([가-힣]{1,6}\s*\d{1,3}\s*(?:장|:)\s*[\d\s,~\-–절:]*\d\s*절?)\s*\)", title)
+    if m:
+        scripture = re.sub(r"\s+", " ", m.group(1)).strip()
 
     t = title.replace(church_name, " ")
+    if sermon_title:
+        t = re.sub(r"[\"“”'‘’][^\"“”'‘’]{2,}[\"“”'‘’]", " ", t)        # 설교 제목은 따로 보여줌
+    if scripture:
+        t = t.replace(m.group(0), " ")                                   # 본문도 따로 보여줌
     t = re.sub(r"\(?\s*(20\d{2})(\d{2})(\d{2})\s*\)?", " ", t)           # (20261018)
     t = re.sub(r"(20\d{2})[./\-\s](\d{1,2})[./\-\s](\d{1,2})", " ", t)    # 2022 10 23
     t = re.sub(r"(?<!\d)\d{2}/\d{2}/\d{2}(?!\d)", " ", t)                 # 21/11/24
-    t = re.sub(r"\d{1,2}\s*월\s*\d{1,2}\s*일", " ", t)                        # 10월 18일 (날짜는 따로 보여줌)
-    t = re.sub(r"\(\s*[가-힣]{2,4}\s*(목사|전도사)\s*\)", " ", t)               # (서대일목사) (설교자는 따로 보여줌)
-    if sermon_title:
-        t = t.split("|")[0]  # '주일예배 설교 | 서대일 목사 - "..."' → '주일예배 설교'
-    t = re.sub(r"\(\s*\)", " ", t)                                       # 날짜를 지우고 남은 빈 괄호
+    t = re.sub(r"\d{1,2}\s*월\s*\d{1,2}\s*일", " ", t)                    # 10월 18일 (날짜는 따로 보여줌)
+    t = re.sub(r"\(?\s*[가-힣]{2,4}\s*(목사|전도사)\s*\)?", " ", t)        # 서대일 목사 (설교자는 따로 보여줌)
+    t = t.split("|")[0]                                                  # '주일예배 설교 | ...' → '주일예배 설교'
+    t = re.sub(r"\(\s*\)", " ", t)                                       # 지우고 남은 빈 괄호
     t = re.sub(r"\s+", " ", t).strip(" -|·_")
-    return t or title, sermon_title, preacher
+    return t or title, sermon_title, preacher, scripture
 
 
 def categorize(title, categories, other):
@@ -193,13 +203,14 @@ def main():
         if not date and lookups < MAX_DATE_LOOKUPS:
             lookups += 1
             date = lookup_upload_date(vid)
-        display, sermon_title, preacher = clean_title(title, church_name)
+        display, sermon_title, preacher, scripture = clean_title(title, church_name)
         items.append({
             "id": vid,
             "title": title,
             "display": display,
             "sermonTitle": sermon_title,
             "preacher": preacher,
+            "scripture": scripture,
             "date": date,
             "category": categorize(title, categories, other),
             "duration": src.get("duration") or prev.get("duration"),

@@ -107,7 +107,7 @@ function thumbHTML(v, church, big = false) {
 
 function cardHTML(v, church) {
   const title = v.sermonTitle || v.display;
-  const sub = [fmtDate(v.date), v.sermonTitle ? v.display : "", v.preacher].filter(Boolean).join(" · ");
+  const sub = [fmtDate(v.date), v.sermonTitle ? v.display : "", v.scripture, v.preacher].filter(Boolean).join(" · ");
   return `<a class="card s-card" href="${ytUrl(v.id)}" target="_blank" rel="noopener" title="${esc(v.title)}">
       ${thumbHTML(v, church)}
       <div class="meta"><div class="cat">${esc(v.category)}</div><h3>${esc(title)}</h3><div class="sub">${esc(sub)}</div></div>
@@ -132,7 +132,7 @@ function renderHome(church, sermons) {
     f.innerHTML = `${thumbHTML(latest, church, true)}
       <div class="meta"><div class="eyebrow">이번 주 ${esc(latest.category)}</div>
         <h2>${esc(latest.sermonTitle || latest.display)}</h2>
-        <p>${esc([fmtDate(latest.date), latest.preacher].filter(Boolean).join(" · "))} · 누르면 유튜브에서 열립니다</p></div>`;
+        <p>${esc([latest.scripture, latest.preacher, fmtDate(latest.date)].filter(Boolean).join(" · "))} · 누르면 유튜브에서 열립니다</p></div>`;
   }
 
   // 예배 시간 요약: 모든 예배를 한 줄씩
@@ -193,7 +193,7 @@ function renderSermons(church, sermons) {
       if (state.cat !== "전체" && v.category !== state.cat) return false;
       if (!q) return true;
       // 제목·날짜(2026-10-18, 20261018, 2026.10.18 어느 형식이든) 검색
-      const hay = [v.title, v.display, v.sermonTitle, v.preacher, v.date, (v.date || "").replace(/-/g, ""), (v.date || "").replace(/-/g, ".")]
+      const hay = [v.title, v.display, v.sermonTitle, v.scripture, v.preacher, v.date, (v.date || "").replace(/-/g, ""), (v.date || "").replace(/-/g, ".")]
         .join(" ").replace(/\s+/g, "").toLowerCase();
       return hay.includes(q);
     });
