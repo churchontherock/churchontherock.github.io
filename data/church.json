@@ -78,7 +78,8 @@
   "thumbnail": {
     "enabled": false,
     "category": "주일예배",
-    "minutes": [42, 46, 50, 54, 58],
+    "window": [37, 63],
+    "stepSeconds": 15,
     "zoom": 2.0,
     "center": [0.535, 0.35],
     "faceY": 0.42,

@@ -12,3 +12,6 @@ Thumbs.db
 # 계정 복구 코드 등 비밀 파일 — 절대 올리지 않는다
 *recovery-codes*
 *.secret
+
+# 표정 모델은 자동 실행 때 받아 씀(저장소에 넣지 않음)
+scripts/face_landmarker.task

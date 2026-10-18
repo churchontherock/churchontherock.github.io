@@ -3,8 +3,8 @@
 
 - GitHub Actions 가 설교 목록 갱신 직후 실행한다(.github/workflows/update-sermons.yml).
 - 설정은 data/church.json 의 "thumbnail" 항목에서 바꾼다.
-    "minutes": 설교 중일 가능성이 높은 시점(분). 여러 개를 뽑아 그중 '가장 평범한' 장면을 고른다.
-               (가사 화면·특수 자막처럼 혼자 튀는 장면을 피하기 위해)
+    "window":  설교 중일 시간대(분). 이 사이를 stepSeconds(초) 간격으로 뽑아
+               눈을 뜨고 정면을 보는 장면 중 가장 웃는 장면을 고른다(pick_best 참고).
     "since":   이 날짜 이후 영상만 바꾼다(예전 영상 썸네일은 건드리지 않음).
 - 유튜브에 올리려면 GitHub 저장소 Secrets 에 아래 3개가 있어야 한다(README '썸네일 자동 교체' 참고).
     YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN
@@ -94,16 +94,72 @@ def caption_ratio(path):
     return sum(1 for v in px if v < 45) / len(px)
 
 
-def most_typical(paths):
-    """자막이 덮이지 않은 장면 중에서, 나머지와 가장 비슷한 장면(메도이드)을 고른다.
-    가사 화면·삽입 사진처럼 혼자 튀는 화면을 피하기 위해서다."""
-    clean = [p for p in paths if caption_ratio(p) < 0.35] or paths
-    with_face = [p for p in clean if find_face(p)]  # 고개를 숙이거나 돌린 장면보다 정면 얼굴 장면 우선
-    clean = with_face or clean
+_LANDMARKER = None
+
+
+def expression(path):
+    """얼굴 표정 점수 {blink: 눈 감김 0~1, smile: 웃음 0~1}. 분석 도구가 없거나 얼굴을 못 읽으면 None.
+    구글 MediaPipe 얼굴 표정 모델(face_landmarker.task)을 쓴다. 모델 위치는 환경변수 FACE_MODEL.
+    원본 화면에선 얼굴이 작아 못 읽으므로, 먼저 OpenCV 로 얼굴을 찾아 그 주변만 잘라서 넣는다."""
+    global _LANDMARKER
+    model = os.environ.get("FACE_MODEL", str(ROOT / "scripts" / "face_landmarker.task"))
+    try:
+        import cv2
+        import numpy as np
+        import mediapipe as mp
+        from mediapipe.tasks import python as mpt
+        from mediapipe.tasks.python import vision
+    except ImportError:
+        return None
+    if not os.path.exists(model):
+        return None
+    if _LANDMARKER is None:
+        _LANDMARKER = vision.FaceLandmarker.create_from_options(vision.FaceLandmarkerOptions(
+            base_options=mpt.BaseOptions(model_asset_path=model), output_face_blendshapes=True, num_faces=1))
+    face = find_face(path)
+    img = cv2.imread(path)
+    if not face or img is None:
+        return None
+    h, w = img.shape[:2]
+    cx, cy, half = face[0] * w, face[1] * h, face[2] * h * 1.6  # 얼굴 크기의 약 3배 정사각형
+    crop = img[max(int(cy - half), 0):int(cy + half), max(int(cx - half), 0):int(cx + half)]
+    if crop.size == 0:
+        return None
+    crop = cv2.resize(crop, (480, 480))
+    r = _LANDMARKER.detect(mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(crop[:, :, ::-1])))
+    if not r.face_blendshapes:
+        return None
+    b = {c.category_name: c.score for c in r.face_blendshapes[0]}
+    return {"blink": (b["eyeBlinkLeft"] + b["eyeBlinkRight"]) / 2,
+            "smile": (b["mouthSmileLeft"] + b["mouthSmileRight"]) / 2,
+            "down": (b["eyeLookDownLeft"] + b["eyeLookDownRight"]) / 2,   # 원고를 내려다보는 시선
+            "jaw": b["jawOpen"]}
+
+
+def pick_best(paths):
+    """좋은 썸네일 장면 고르기.
+    1) 성경 구절 자막이 덮인 장면, 혼자 튀는 장면(삽입 사진·가사 화면)을 뺀다
+    2) 정면 얼굴이 보이는 장면만 남긴다
+    3) 눈을 뜨고(눈 감김 < 0.35) 카메라 쪽을 보는(시선 아래 < 0.3) 장면만 남긴다
+       — 원고를 내려다보면 눈이 반쯤 감기고 입꼬리가 '웃음'으로 잘못 읽히기 때문
+    4) 그중 웃음이 가장 큰 장면. 웃는 장면이 없으면 눈을 또렷이 뜨고 입을 크게 벌리지 않은 편안한 장면
+    표정 분석 도구가 없으면 2) 까지만 하고 가장 평범한 장면을 고른다."""
     small = {p: Image.open(p).convert("L").resize((96, 54)) for p in paths}
     def dist(a, b):
         return ImageStat.Stat(ImageChops.difference(small[a], small[b])).mean[0]
-    return min(clean, key=lambda a: sum(dist(a, b) for b in paths))
+    spread = {a: sum(dist(a, b) for b in paths) for a in paths}
+    med = sorted(spread.values())[len(spread) // 2]
+    pool = [p for p in paths if caption_ratio(p) < 0.35 and spread[p] <= med * 1.5] or paths
+    faces = [p for p in pool if find_face(p)]
+    if not faces:
+        return min(pool, key=lambda a: spread[a])
+    ok = {p: e for p in faces if (e := expression(p))}
+    if not ok:
+        return min(faces, key=lambda a: spread[a])
+    front = {p: e for p, e in ok.items() if e["blink"] < 0.35 and e["down"] < 0.3} or ok
+    def score(e):
+        return 2 * e["smile"] - e["blink"] - e["down"] - 0.8 * max(0.0, e["jaw"] - 0.12)
+    return max(front, key=lambda p: score(front[p]))
 
 
 def find_face(path):
@@ -162,24 +218,23 @@ def frame_to_thumb(src, out, zoom=1.0, center=(0.5, 0.5), face_y=None, look=None
     im.save(out, quality=90)  # 유튜브 권장 1280x720, 2MB 이하
 
 
-def make_thumbnail(video_id, minutes, work_dir, zoom=1.0, center=(0.5, 0.5), face_y=None, look=None):
+def make_thumbnail(video_id, seconds, work_dir, zoom=1.0, center=(0.5, 0.5), face_y=None, look=None):
     info = video_info(video_id)
     fmt = pick_format(info)
     duration = info.get("duration") or 0
     shots = []
-    for m in minutes:
-        s = m * 60
-        if duration and s >= duration - 30:
+    for sec in seconds:
+        if duration and sec >= duration - 30:
             continue
-        p = os.path.join(work_dir, f"{video_id}_{m:02d}.jpg")
+        p = os.path.join(work_dir, f"{video_id}_{sec:05d}.jpg")
         try:
-            if grab_frame(info, fmt, s, p):
+            if grab_frame(info, fmt, sec, p):
                 shots.append(p)
         except Exception as e:
-            print(f"  {m}분 장면 실패: {e}")
+            print(f"  {sec}초 장면 실패: {e}")
     if not shots:
         raise RuntimeError("장면을 하나도 못 뽑음")
-    best = most_typical(shots) if len(shots) > 2 else shots[0]
+    best = pick_best(shots) if len(shots) > 2 else shots[0]
     out = os.path.join(work_dir, f"{video_id}_thumb.jpg")
     frame_to_thumb(best, out, zoom, center, face_y, look)
     return out, os.path.basename(best)
@@ -211,7 +266,9 @@ def upload_thumbnail(token, video_id, jpg):
 def main():
     church = json.loads(CHURCH_JSON.read_text(encoding="utf-8"))
     cfg = church.get("thumbnail") or {}
-    minutes = cfg.get("minutes") or [42, 46, 50, 54, 58]
+    a, b = cfg.get("window", [40, 62])                       # 설교 중일 시간대(분)
+    step = int(cfg.get("stepSeconds", 15))                   # 이 간격(초)으로 장면을 뽑아 표정을 비교
+    seconds = list(range(int(a * 60), int(b * 60), step))
     zoom = float(cfg.get("zoom", 1.0))                      # 1.0 = 원본 화면, 1.3 = 30% 확대
     center = tuple(cfg.get("center", [0.5, 0.5]))            # 확대 중심(가로, 세로 비율)
     face_y = cfg.get("faceY")                                # 얼굴을 둘 세로 위치(0=위, 1=아래). 없으면 얼굴 추적 안 함
@@ -222,7 +279,7 @@ def main():
         out_dir, ids = args[0], args[1:]
         os.makedirs(out_dir, exist_ok=True)
         for vid in ids:
-            jpg, chosen = make_thumbnail(vid, minutes, out_dir, zoom, center, face_y, look)
+            jpg, chosen = make_thumbnail(vid, seconds, out_dir, zoom, center, face_y, look)
             print(f"{vid}: {chosen} 선택 → {jpg}")
         return
 
@@ -249,7 +306,7 @@ def main():
         for v in todo:
             print(f"{v['date']} {v['title']}")
             try:
-                jpg, chosen = make_thumbnail(v["id"], minutes, work, zoom, center, face_y, look)
+                jpg, chosen = make_thumbnail(v["id"], seconds, work, zoom, center, face_y, look)
                 upload_thumbnail(token, v["id"], jpg)
             except Exception as e:  # 실패한 영상은 기록하지 않아 다음 실행에서 다시 시도
                 print(f"  실패: {e}")

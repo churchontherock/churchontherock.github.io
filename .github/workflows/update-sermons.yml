@@ -35,10 +35,12 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: 도구 설치 (yt-dlp = 유튜브 목록, Pillow·ffmpeg·OpenCV = 썸네일 장면 뽑기·얼굴 찾기)
+      - name: 도구 설치 (yt-dlp = 유튜브 목록, Pillow·ffmpeg·OpenCV·MediaPipe = 썸네일 장면 뽑기·얼굴·표정)
         run: |
-          pip install --upgrade yt-dlp Pillow opencv-python-headless
+          pip install --upgrade yt-dlp Pillow mediapipe "opencv-python-headless<5"
           command -v ffmpeg || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          # 표정(눈 뜸·시선·웃음) 분석용 구글 MediaPipe 얼굴 모델
+          curl -sL -o scripts/face_landmarker.task https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
 
       - name: 설교 목록 갱신
         # 유튜브 쪽 문제로 실패해도 기존 목록으로 사이트 배포는 계속한다
