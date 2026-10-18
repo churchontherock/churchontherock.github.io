@@ -79,8 +79,10 @@
     "enabled": false,
     "category": "주일예배",
     "minutes": [42, 46, 50, 54, 58],
-    "zoom": 1.0,
-    "center": [0.5, 0.42],
+    "zoom": 2.0,
+    "center": [0.535, 0.35],
+    "faceY": 0.42,
+    "look": { "brightness": 1.08, "contrast": 1.06, "color": 1.08, "warmth": 1 },
     "since": "2026-10-18"
   },
 

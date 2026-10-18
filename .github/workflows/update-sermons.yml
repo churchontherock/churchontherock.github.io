@@ -35,9 +35,9 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: 도구 설치 (yt-dlp = 유튜브 목록, Pillow·ffmpeg = 썸네일 장면 뽑기)
+      - name: 도구 설치 (yt-dlp = 유튜브 목록, Pillow·ffmpeg·OpenCV = 썸네일 장면 뽑기·얼굴 찾기)
         run: |
-          pip install --upgrade yt-dlp Pillow
+          pip install --upgrade yt-dlp Pillow opencv-python-headless
           command -v ffmpeg || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
 
       - name: 설교 목록 갱신

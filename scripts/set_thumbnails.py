@@ -98,25 +98,71 @@ def most_typical(paths):
     """자막이 덮이지 않은 장면 중에서, 나머지와 가장 비슷한 장면(메도이드)을 고른다.
     가사 화면·삽입 사진처럼 혼자 튀는 화면을 피하기 위해서다."""
     clean = [p for p in paths if caption_ratio(p) < 0.35] or paths
+    with_face = [p for p in clean if find_face(p)]  # 고개를 숙이거나 돌린 장면보다 정면 얼굴 장면 우선
+    clean = with_face or clean
     small = {p: Image.open(p).convert("L").resize((96, 54)) for p in paths}
     def dist(a, b):
         return ImageStat.Stat(ImageChops.difference(small[a], small[b])).mean[0]
     return min(clean, key=lambda a: sum(dist(a, b) for b in paths))
 
 
-def frame_to_thumb(src, out, zoom=1.0, center=(0.5, 0.5)):
-    """zoom>1 이면 center(가로·세로 비율 위치)를 중심으로 확대해 목사님이 크게 보이게 한다."""
+def find_face(path):
+    """가장 큰 정면 얼굴의 중심(가로·세로 비율)과 얼굴 높이 비율. 못 찾으면 None.
+    OpenCV 가 없거나 얼굴이 안 보이면 설정값 center 로 자른다."""
+    try:
+        import cv2
+    except ImportError:
+        return None
+    img = cv2.imread(path)
+    if img is None:
+        return None
+    h, w = img.shape[:2]
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    det = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    faces = det.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=6, minSize=(int(h * 0.05), int(h * 0.05)))
+    if len(faces) == 0:
+        return None
+    x, y, fw, fh = max(faces, key=lambda f: f[2] * f[3])  # 화면에서 가장 큰 얼굴 = 설교자
+    return ((x + fw / 2) / w, (y + fh / 2) / h, fh / h)
+
+
+def adjust(im, look):
+    """밝기·대비·채도·따뜻함 보정. look 은 church.json thumbnail.look."""
+    from PIL import ImageEnhance
+    im = ImageEnhance.Brightness(im).enhance(look.get("brightness", 1.0))
+    im = ImageEnhance.Contrast(im).enhance(look.get("contrast", 1.0))
+    im = ImageEnhance.Color(im).enhance(look.get("color", 1.0))
+    k = look.get("warmth", 0)  # 1 = 은은하게(빨강 +6%, 초록 +2%, 파랑 -7%)
+    if k:
+        r, g, b = im.split()
+        r = r.point(lambda v: min(255, int(v * (1 + 0.06 * k))))
+        g = g.point(lambda v: min(255, int(v * (1 + 0.02 * k))))
+        b = b.point(lambda v: int(v * (1 - 0.07 * k)))
+        im = Image.merge("RGB", (r, g, b))
+    return im
+
+
+def frame_to_thumb(src, out, zoom=1.0, center=(0.5, 0.5), face_y=None, look=None):
+    """zoom>1 이면 확대해서 자른다. face_y 가 있으면 얼굴을 찾아 그 위치(세로 비율)에 오도록 맞춘다."""
     im = Image.open(src).convert("RGB")
     if zoom > 1:
         w, h = im.size
         cw, ch = w / zoom, h / zoom
-        x = min(max(center[0] * w - cw / 2, 0), w - cw)
-        y = min(max(center[1] * h - ch / 2, 0), h - ch)
+        face = find_face(src) if face_y is not None else None
+        if face:
+            cx, cy = face[0] * w, face[1] * h + (0.5 - face_y) * ch  # 얼굴이 자른 화면의 face_y 높이에 오게
+        else:
+            cx, cy = center[0] * w, center[1] * h
+        x = min(max(cx - cw / 2, 0), w - cw)
+        y = min(max(cy - ch / 2, 0), h - ch)
         im = im.crop((int(x), int(y), int(x + cw), int(y + ch)))
-    im.resize((1280, 720), Image.LANCZOS).save(out, quality=88)  # 유튜브 권장 1280x720, 2MB 이하
+    im = im.resize((1280, 720), Image.LANCZOS)
+    if look:
+        im = adjust(im, look)
+    im.save(out, quality=90)  # 유튜브 권장 1280x720, 2MB 이하
 
 
-def make_thumbnail(video_id, minutes, work_dir, zoom=1.0, center=(0.5, 0.5)):
+def make_thumbnail(video_id, minutes, work_dir, zoom=1.0, center=(0.5, 0.5), face_y=None, look=None):
     info = video_info(video_id)
     fmt = pick_format(info)
     duration = info.get("duration") or 0
@@ -135,7 +181,7 @@ def make_thumbnail(video_id, minutes, work_dir, zoom=1.0, center=(0.5, 0.5)):
         raise RuntimeError("장면을 하나도 못 뽑음")
     best = most_typical(shots) if len(shots) > 2 else shots[0]
     out = os.path.join(work_dir, f"{video_id}_thumb.jpg")
-    frame_to_thumb(best, out, zoom, center)
+    frame_to_thumb(best, out, zoom, center, face_y, look)
     return out, os.path.basename(best)
 
 
@@ -168,13 +214,15 @@ def main():
     minutes = cfg.get("minutes") or [42, 46, 50, 54, 58]
     zoom = float(cfg.get("zoom", 1.0))                      # 1.0 = 원본 화면, 1.3 = 30% 확대
     center = tuple(cfg.get("center", [0.5, 0.5]))            # 확대 중심(가로, 세로 비율)
+    face_y = cfg.get("faceY")                                # 얼굴을 둘 세로 위치(0=위, 1=아래). 없으면 얼굴 추적 안 함
+    look = cfg.get("look")                                   # 밝기·대비·채도·따뜻함 보정
 
     if "--dry-run" in sys.argv:
         args = [a for a in sys.argv[1:] if a != "--dry-run"]
         out_dir, ids = args[0], args[1:]
         os.makedirs(out_dir, exist_ok=True)
         for vid in ids:
-            jpg, chosen = make_thumbnail(vid, minutes, out_dir, zoom, center)
+            jpg, chosen = make_thumbnail(vid, minutes, out_dir, zoom, center, face_y, look)
             print(f"{vid}: {chosen} 선택 → {jpg}")
         return
 
@@ -201,7 +249,7 @@ def main():
         for v in todo:
             print(f"{v['date']} {v['title']}")
             try:
-                jpg, chosen = make_thumbnail(v["id"], minutes, work, zoom, center)
+                jpg, chosen = make_thumbnail(v["id"], minutes, work, zoom, center, face_y, look)
                 upload_thumbnail(token, v["id"], jpg)
             except Exception as e:  # 실패한 영상은 기록하지 않아 다음 실행에서 다시 시도
                 print(f"  실패: {e}")
