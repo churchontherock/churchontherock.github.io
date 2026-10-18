@@ -157,12 +157,20 @@ function renderHome(church, sermons) {
   const c = church.contact || {};
   $("#visit-short").innerHTML = `
     <div><div class="eyebrow">오시는 길</div><h3 style="font-size:20px;margin:4px 0 6px">${esc(c.address)}</h3>
-    <p style="margin:0;color:var(--muted)">${esc(c.transit || "")}</p></div>
+    <p style="margin:0;color:var(--muted)">${esc(c.transit || "")}</p>
     <div class="btn-row" style="margin-top:14px">
       ${c.naverMap ? `<a class="btn" href="${esc(c.naverMap)}" target="_blank" rel="noopener">네이버 지도</a>` : ""}
       ${c.kakaoMap ? `<a class="btn" href="${esc(c.kakaoMap)}" target="_blank" rel="noopener">카카오맵</a>` : ""}
       ${c.phone ? `<a class="btn primary" href="tel:${esc(c.phone.replace(/[^0-9+]/g, ""))}">전화하기</a>` : ""}
-    </div>`;
+    </div></div>
+    ${entranceHTML(c)}`;
+}
+
+// 교회 입구 사진 + 안내문 (홈·예배 안내 공통). 문구는 church.json 의 contact.entranceNote
+function entranceHTML(c) {
+  if (!c.entrancePhoto) return "";
+  return `<figure style="margin:0"><img src="${esc(c.entrancePhoto)}" alt="교회 입구" loading="lazy">
+    ${c.entranceNote ? `<figcaption class="caption">${esc(c.entranceNote)}</figcaption>` : ""}</figure>`;
 }
 
 // ---- 설교 목록 ----
@@ -296,7 +304,7 @@ function renderWorship(church) {
         ${c.phone ? `<a class="btn primary" href="tel:${esc(tel)}">전화하기</a>` : ""}
       </div>
     </div>
-    ${c.entrancePhoto ? `<figure style="margin:0"><img src="${esc(c.entrancePhoto)}" alt="교회 입구"><figcaption class="caption">상가 건물 2층입니다. 이 입구로 들어와 계단으로 올라오세요.</figcaption></figure>` : ""}`;
+    ${entranceHTML(c)}`;
 }
 
 // ---- 시작 ----
