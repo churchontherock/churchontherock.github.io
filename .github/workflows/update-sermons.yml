@@ -1,0 +1,83 @@
+# 유튜브 채널의 새 영상을 확인해 data/sermons.json 을 갱신하고, 사이트를 GitHub Pages 에 배포합니다.
+# 관리자는 유튜브에 영상만 올리면 됩니다. 이 파일은 고칠 필요가 없습니다.
+#
+# 언제 실행되나
+#  - 매일 자정(한국시간)과 주일 오후 1:30 : 새 설교 확인
+#  - church.json 등 파일을 고쳐 저장소에 올렸을 때 : 바로 사이트에 반영
+#  - Actions 탭의 'Run workflow' 버튼 : 수동 실행
+name: 설교 목록 갱신 및 배포
+
+on:
+  schedule:
+    - cron: "0 15 * * *"   # 매일 00:00 (한국시간)
+    - cron: "30 4 * * 0"   # 주일 13:30 (한국시간)
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write    # 갱신된 sermons.json 을 커밋
+  pages: write       # GitHub Pages 배포
+  id-token: write    # GitHub Pages 배포 인증
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 도구 설치 (yt-dlp = 유튜브 목록, Pillow·ffmpeg = 썸네일 장면 뽑기)
+        run: |
+          pip install --upgrade yt-dlp Pillow
+          command -v ffmpeg || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+
+      - name: 설교 목록 갱신
+        # 유튜브 쪽 문제로 실패해도 기존 목록으로 사이트 배포는 계속한다
+        continue-on-error: true
+        run: python scripts/update_sermons.py
+
+      - name: 새 주일예배 썸네일을 설교 장면으로 교체
+        # 비밀값(Secrets)이 없으면 아무것도 하지 않는다. 실패해도 배포는 계속한다
+        continue-on-error: true
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: python scripts/set_thumbnails.py
+
+      - name: 바뀐 내용이 있으면 커밋
+        run: |
+          git add data/sermons.json data/thumbnails_done.json 2>/dev/null || git add data/sermons.json
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "설교 목록·썸네일 기록 자동 갱신"
+          git push
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

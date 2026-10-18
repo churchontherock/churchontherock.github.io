@@ -1,0 +1,250 @@
+/* 반석위에세우신교회 홈페이지 스타일
+   색을 바꾸고 싶으면 아래 :root 의 값만 고치면 사이트 전체에 반영됩니다. */
+:root {
+  --bg: #FBF6EE;          /* 바탕: 따뜻한 크림색 */
+  --surface: #FFFFFF;     /* 카드 바탕 */
+  --surface-2: #F4EBDD;   /* 옅은 베이지 구역 */
+  --ink: #3A2E25;         /* 본문 글자: 짙은 갈색 */
+  --muted: #7B6A5C;       /* 보조 글자 */
+  --line: #E7DAC7;        /* 구분선 */
+  --accent: #E0781C;      /* 교회 주황 (심볼 색) */
+  --accent-strong: #B95E10;
+  --accent-soft: #FCE9D6;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(58, 46, 37, .06), 0 6px 20px rgba(58, 46, 37, .06);
+  --font-body: "Noto Sans KR", system-ui, -apple-system, "Malgun Gothic", sans-serif;
+  --font-head: "Gowun Batang", "Noto Serif KR", serif;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--font-head); line-height: 1.35; margin: 0; font-weight: 700; }
+
+.wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+@media (min-width: 768px) { .wrap { padding: 0 28px; } }
+
+/* ---- 머리글 ---- */
+.site-header {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(251, 246, 238, .92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand img { width: 44px; height: auto; }
+.brand span { font-family: var(--font-head); font-weight: 700; font-size: 18px; }
+.nav { display: flex; gap: 4px; }
+.nav a {
+  text-decoration: none; padding: 8px 14px; border-radius: 999px;
+  color: var(--muted); font-weight: 500; font-size: 15px;
+}
+.nav a:hover { color: var(--ink); background: var(--surface-2); }
+.nav a[aria-current="page"] { color: var(--accent-strong); background: var(--accent-soft); }
+.menu-btn { display: none; background: none; border: 0; padding: 8px; cursor: pointer; color: var(--ink); }
+@media (max-width: 720px) {
+  .menu-btn { display: block; }
+  .nav {
+    display: none; position: absolute; left: 0; right: 0; top: 64px;
+    flex-direction: column; padding: 8px 16px 16px; background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav.open { display: flex; }
+  .nav a { padding: 12px 14px; font-size: 16px; }
+}
+
+/* ---- 공통 구역 ---- */
+main { padding-bottom: 56px; }
+.section { padding: 40px 0 8px; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.section-head h2 { font-size: 24px; }
+.more { color: var(--accent-strong); text-decoration: none; font-weight: 500; font-size: 15px; white-space: nowrap; }
+.more:hover { text-decoration: underline; }
+.page-title { padding: 40px 0 8px; }
+.page-title h1 { font-size: 30px; }
+.page-title p { color: var(--muted); margin: 6px 0 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.denom { white-space: nowrap; }
+.denom-mark { height: 1.5em; width: auto; display: inline-block; vertical-align: -0.35em; margin-right: 5px; }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .04em; color: var(--accent-strong); }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+  padding: 10px 16px; border-radius: 999px; font-weight: 500; font-size: 15px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+}
+.btn:hover { border-color: var(--accent); color: var(--accent-strong); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { background: var(--accent-strong); color: #fff; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---- 홈: 첫 화면 ---- */
+.hero { padding: 36px 0 8px; }
+.hero-intro { margin-bottom: 22px; }
+.hero-intro h1 { font-size: 30px; margin-top: 4px; }
+.motto { margin: 8px 0 0; color: var(--muted); font-family: var(--font-head); font-size: 17px; }
+.motto cite { font-style: normal; font-size: 14px; margin-left: 6px; }
+@media (min-width: 768px) { .hero-intro h1 { font-size: 38px; } .motto { font-size: 19px; } }
+
+.hero-grid { display: grid; gap: 18px; }
+@media (min-width: 900px) { .hero-grid { grid-template-columns: 1.7fr 1fr; align-items: start; } }
+.side-stack { display: grid; gap: 18px; }
+
+/* 이번 주 설교(큰 카드) */
+.feature { overflow: hidden; text-decoration: none; display: block; }
+.feature .thumb { aspect-ratio: 16 / 9; }
+.feature .meta { padding: 16px 18px 18px; }
+.feature .meta h2 { font-size: 22px; margin-top: 4px; }
+.feature .meta p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+
+/* 썸네일 + 재생 버튼 */
+.thumb { position: relative; background: #2b221b; overflow: hidden; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+a:hover .thumb img { transform: scale(1.03); }
+.play {
+  position: absolute; inset: 0; margin: auto; width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(224, 120, 28, .92); display: grid; place-items: center;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .25);
+}
+.play::after { content: ""; margin-left: 5px; border-style: solid; border-width: 12px 0 12px 19px; border-color: transparent transparent transparent #fff; }
+.badge {
+  position: absolute; right: 8px; bottom: 8px; background: rgba(0, 0, 0, .72); color: #fff;
+  font-size: 12px; padding: 2px 6px; border-radius: 4px;
+}
+.badge.live { left: 8px; right: auto; top: 8px; bottom: auto; background: #D62F2F; font-weight: 700; }
+
+/* 포스터형 썸네일 (cardStyle: "poster") */
+.poster {
+  position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
+  padding: 7% 8%; color: #fff;
+  background: linear-gradient(135deg, #E98A33 0%, #C9631A 100%);
+}
+.poster .p-cat { font-size: clamp(11px, 2.4cqw, 15px); opacity: .9; font-weight: 700; }
+.poster .p-date { font-family: var(--font-head); font-size: clamp(22px, 9cqw, 54px); font-weight: 700; line-height: 1.1; }
+.poster .p-title { font-size: clamp(12px, 3.2cqw, 20px); font-weight: 500; margin-top: 4px; max-width: 58%; }
+.thumb .poster .p-logo { position: absolute; right: 6%; bottom: 10%; width: 22%; height: auto; opacity: .95; filter: brightness(0) invert(1); transform: none; }
+.thumb .poster .p-face { position: absolute; right: 0; bottom: 0; height: 100%; width: 42%; object-fit: cover; object-position: top; transform: none; }
+.thumb { container-type: inline-size; }
+
+/* 예배 시간 요약 */
+.times { padding: 18px 20px; }
+.times h3 { font-size: 18px; margin-bottom: 8px; }
+.time-row { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 15px; }
+.time-row:last-of-type { border-bottom: 0; }
+.time-row b { font-weight: 500; }
+.time-row span { color: var(--muted); white-space: nowrap; }
+.times .more { display: inline-block; margin-top: 8px; }
+
+/* 점심·소그룹 안내 (홈 한 구석) */
+.highlight {
+  padding: 18px 20px; background: var(--accent-soft); border: 1px solid #F3CFAA;
+  border-radius: var(--radius);
+}
+.highlight h3 { font-size: 18px; margin: 4px 0 8px; }
+.highlight p { margin: 0 0 6px; font-size: 15px; }
+.highlight .tag {
+  display: inline-block; margin-top: 6px; font-size: 13px; font-weight: 500;
+  background: #fff; color: var(--accent-strong); padding: 4px 10px; border-radius: 999px;
+}
+
+/* ---- 설교 카드 격자 ---- */
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.s-card { text-decoration: none; overflow: hidden; display: flex; flex-direction: column; }
+.s-card .thumb { aspect-ratio: 16 / 9; }
+.s-card .meta { padding: 12px 14px 14px; }
+.s-card .cat { font-size: 12px; font-weight: 700; color: var(--accent-strong); }
+.s-card h3 { font-family: var(--font-body); font-size: 16px; font-weight: 500; margin: 2px 0 0; line-height: 1.45; }
+.s-card .sub { font-size: 14px; color: var(--muted); margin-top: 2px; }
+
+/* 설교 페이지 도구줄 */
+.toolbar { display: flex; flex-direction: column; gap: 12px; margin: 20px 0 18px; }
+@media (min-width: 768px) { .toolbar { flex-direction: row; align-items: center; justify-content: space-between; } }
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.tabs button {
+  flex: none; border: 1px solid var(--line); background: var(--surface); color: var(--muted);
+  padding: 7px 14px; border-radius: 999px; font: inherit; font-size: 15px; cursor: pointer;
+}
+.tabs button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.search {
+  width: 100%; max-width: 320px; font: inherit; font-size: 16px; padding: 9px 14px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink);
+}
+@media (max-width: 767px) { .search { max-width: none; } }
+.search:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.result-info { color: var(--muted); font-size: 14px; margin: -6px 0 14px; }
+.pager { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 28px; flex-wrap: wrap; }
+.pager button {
+  min-width: 40px; height: 40px; border: 1px solid var(--line); background: var(--surface);
+  border-radius: 10px; font: inherit; cursor: pointer; color: var(--ink);
+}
+.pager button[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.pager button:disabled { opacity: .4; cursor: default; }
+.empty { text-align: center; color: var(--muted); padding: 40px 0; }
+
+/* ---- 교회 소개 ---- */
+.about-grid { display: grid; gap: 24px; }
+@media (min-width: 900px) { .about-grid { grid-template-columns: 1fr 1fr; align-items: center; } }
+.about-photo { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.about-photo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.vision { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.vision li {
+  display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-size: 16px;
+}
+.vision li::before {
+  content: ""; flex: none; width: 8px; height: 8px; margin-top: 10px; border-radius: 50%; background: var(--accent);
+}
+.pastor { display: grid; gap: 20px; padding: 24px; }
+@media (min-width: 768px) { .pastor.has-photo { grid-template-columns: 220px 1fr; } }
+.pastor img { width: 100%; max-width: 220px; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; }
+.pastor .name { font-family: var(--font-head); font-size: 20px; }
+.pastor .greeting p { margin: 0 0 12px; }
+.staff { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.staff div { padding: 14px 16px; text-align: center; }
+.staff small { display: block; color: var(--accent-strong); font-weight: 700; font-size: 13px; }
+.staff b { font-family: var(--font-head); font-size: 18px; font-weight: 700; }
+.timeline { list-style: none; padding: 0; margin: 0; border-left: 2px solid var(--line); }
+.timeline li { padding: 4px 0 14px 18px; position: relative; }
+.timeline li::before { content: ""; position: absolute; left: -7px; top: 12px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+.timeline b { color: var(--accent-strong); margin-right: 8px; }
+
+/* ---- 예배 안내 ---- */
+.worship-grid { display: grid; gap: 18px; }
+@media (min-width: 800px) { .worship-grid { grid-template-columns: 1fr 1fr; } }
+.w-table { padding: 20px; }
+.w-table h2 { font-size: 20px; margin-bottom: 8px; }
+.w-row { padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.w-row:last-child { border-bottom: 0; }
+.w-row .top { display: flex; justify-content: space-between; gap: 10px; }
+.w-row .top b { font-weight: 700; }
+.w-row .top span { color: var(--accent-strong); font-weight: 500; white-space: nowrap; }
+.w-row .note { font-size: 14px; color: var(--muted); }
+.visit { display: grid; gap: 20px; padding: 20px; }
+@media (min-width: 800px) { .visit { grid-template-columns: 1fr 1fr; align-items: center; } }
+.visit img { border-radius: 12px; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.visit dl { margin: 0 0 16px; display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; }
+.visit dt { color: var(--muted); font-size: 14px; padding-top: 2px; }
+.visit dd { margin: 0; }
+.caption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+/* ---- 바닥글 ---- */
+.site-footer { border-top: 1px solid var(--line); background: var(--surface-2); padding: 28px 0 36px; font-size: 14px; color: var(--muted); }
+.site-footer .f-name { font-family: var(--font-head); color: var(--ink); font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.site-footer .f-name img { width: 34px; }
+.site-footer p { margin: 4px 0; }
+.site-footer a { text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+
+.skeleton { background: linear-gradient(90deg, var(--surface-2), #fff, var(--surface-2)); background-size: 200% 100%; animation: sk 1.4s infinite; }
+@keyframes sk { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } .thumb img { transition: none; } }

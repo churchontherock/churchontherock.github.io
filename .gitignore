@@ -1,0 +1,14 @@
+# 파이썬 임시 파일
+__pycache__/
+*.pyc
+# 윈도우·OneDrive 부산물
+desktop.ini
+Thumbs.db
+~$*
+
+# Claude 작업 메모(내부용) — 공개 저장소에 올리지 않는다
+00_HANDOFF.md
+
+# 계정 복구 코드 등 비밀 파일 — 절대 올리지 않는다
+*recovery-codes*
+*.secret
