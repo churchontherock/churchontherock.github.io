@@ -1,3 +1,8 @@
+/* 제목 글꼴: 고운바탕(SIL OFL, assets/fonts/OFL-GowunBatang.txt) — 자주 쓰는 한글 2,350자만 담아 사이트에 직접 둔다.
+   구글 폰트를 거치지 않아 접속할 때마다 글꼴이 바뀌는 일이 없다. */
+@font-face { font-family: "Gowun Batang Site"; src: url("../fonts/gowun-batang-regular.woff2") format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "Gowun Batang Site"; src: url("../fonts/gowun-batang-bold.woff2") format("woff2"); font-weight: 700; font-display: block; }
+
 /* 반석위에세우신교회 홈페이지 스타일
    색을 바꾸고 싶으면 아래 :root 의 값만 고치면 사이트 전체에 반영됩니다. */
 :root {
@@ -12,8 +17,8 @@
   --accent-soft: #FCE9D6;
   --radius: 14px;
   --shadow: 0 1px 2px rgba(58, 46, 37, .06), 0 6px 20px rgba(58, 46, 37, .06);
-  --font-body: "Noto Sans KR", system-ui, -apple-system, "Malgun Gothic", sans-serif;
-  --font-head: "Gowun Batang", "Noto Serif KR", serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Noto Sans CJK KR", system-ui, sans-serif;  /* 기기 기본 한글 글꼴 */
+  --font-head: "Gowun Batang Site", "Noto Serif KR", serif;
 }
 
 * { box-sizing: border-box; }
