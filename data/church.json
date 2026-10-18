@@ -77,7 +77,7 @@
 
   "thumbnail": {
     "enabled": false,
-    "category": "주일예배",
+    "category": "주일설교",
     "window": [37, 63],
     "stepSeconds": 15,
     "zoom": 2.0,
@@ -90,8 +90,9 @@
   "sermons": {
     "cardStyle": "youtube",
     "pageSize": 12,
-    "homeCategory": "주일예배",
+    "homeCategory": "주일설교",
     "categories": [
+      { "name": "주일설교", "keywords": ["주일설교", "설교"] },
       { "name": "주일예배", "keywords": ["주일", "1부예배", "2부예배", "부활", "성탄", "추수감사", "대림절", "창립기념", "신년", "온가족예배", "송구영신예배"] },
       { "name": "금요기도회", "keywords": ["금요기도회"] },
       { "name": "새벽기도회", "keywords": ["새벽"] },

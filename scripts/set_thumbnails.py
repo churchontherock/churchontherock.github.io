@@ -222,6 +222,10 @@ def make_thumbnail(video_id, seconds, work_dir, zoom=1.0, center=(0.5, 0.5), fac
     info = video_info(video_id)
     fmt = pick_format(info)
     duration = info.get("duration") or 0
+    if duration and seconds and seconds[0] >= duration - 60:
+        # 설교만 담은 영상(예: 27분)은 설정한 시간대(37~63분)가 없다 → 앞뒤 1분을 뺀 전체에서 고른다
+        step = (seconds[1] - seconds[0]) if len(seconds) > 1 else 15
+        seconds = list(range(60, int(duration) - 60, step))
     shots = []
     for sec in seconds:
         if duration and sec >= duration - 30:
