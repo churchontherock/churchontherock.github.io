@@ -15,6 +15,9 @@
   --accent: #E0781C;      /* 교회 주황 (심볼 색) */
   --accent-strong: #B95E10;
   --accent-soft: #FCE9D6;
+  --blue: #0B3A75;        /* 연세 블루 계열 남색: 제목·버튼·탭 (주황과 보색) */
+  --blue-dark: #082B57;
+  --blue-soft: #E7EEF7;
   --radius: 14px;
   --shadow: 0 1px 2px rgba(58, 46, 37, .06), 0 6px 20px rgba(58, 46, 37, .06);
   --font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Noto Sans CJK KR", system-ui, sans-serif;  /* 기기 기본 한글 글꼴 */
@@ -265,3 +268,15 @@ img[data-zoom] { cursor: zoom-in; }
 .skeleton { background: linear-gradient(90deg, var(--surface-2), #fff, var(--surface-2)); background-size: 200% 100%; animation: sk 1.4s infinite; }
 @keyframes sk { to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } .thumb img { transition: none; } }
+
+/* ---- 블루 포인트: 크림 바탕은 그대로, 제목·주요 버튼·선택된 탭은 남색. 주황은 라벨·재생 버튼·안내 카드 ---- */
+h1, h2, h3 { color: var(--blue); }
+.nav a[aria-current="page"] { color: var(--blue); background: var(--blue-soft); }
+.btn.primary { background: var(--blue); border-color: var(--blue); }
+.btn.primary:hover { background: var(--blue-dark); border-color: var(--blue-dark); }
+.tabs button[aria-pressed="true"], .pager button[aria-current="page"] { background: var(--blue); border-color: var(--blue); }
+.times { border-top: 4px solid var(--blue); }
+.more { color: var(--blue); }
+.site-footer { border-top: 4px solid var(--blue); }
+.staff small { color: var(--blue); }
+.w-row .top span { color: var(--blue); }
