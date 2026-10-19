@@ -169,7 +169,7 @@ function renderHome(church, sermons) {
 // 교회 입구 사진 + 안내문 (홈·예배 안내 공통). 문구는 church.json 의 contact.entranceNote
 function entranceHTML(c) {
   if (!c.entrancePhoto) return "";
-  return `<figure style="margin:0"><img src="${esc(c.entrancePhoto)}" alt="교회 입구" loading="lazy">
+  return `<figure style="margin:0"><img src="${esc(c.entrancePhoto)}" alt="교회 입구" loading="lazy" data-zoom tabindex="0" role="button" aria-label="교회 입구 사진 크게 보기">
     ${c.entranceNote ? `<figcaption class="caption">${esc(c.entranceNote)}</figcaption>` : ""}</figure>`;
 }
 
@@ -251,7 +251,7 @@ function renderAbout(church) {
   const a = church.about || {};
   $("#vision").innerHTML = (a.intro || []).map((l) => `<li>${esc(l)}</li>`).join("");
   $("#denom").innerHTML = church.denomination ? `${denomHTML(church)}에 속한 교회입니다.` : "";
-  if (a.photo) $("#about-photo").innerHTML = `<img src="${esc(a.photo)}" alt="${esc(church.name)} 예배 모습">`;
+  if (a.photo) $("#about-photo").innerHTML = `<img src="${esc(a.photo)}" alt="${esc(church.name)} 예배 모습" data-zoom tabindex="0" role="button" aria-label="예배 사진 크게 보기">`;
   else $("#about-photo").remove();
 
   const p = a.pastor || {};
@@ -307,6 +307,37 @@ function renderWorship(church) {
     ${entranceHTML(c)}`;
 }
 
+// ---- 사진 크게 보기 ----
+// data-zoom 이 붙은 사진을 누르면 화면 가득 크게 보여준다. 바깥을 누르거나 Esc·뒤로가기로 닫는다.
+function setupZoom() {
+  let box = null;
+  function close() {
+    if (!box) return;
+    box.remove(); box = null;
+    document.body.style.overflow = "";
+    if (history.state && history.state.zoom) history.back();
+  }
+  function open(img) {
+    box = document.createElement("div");
+    box.className = "lightbox";
+    box.innerHTML = `<img src="${esc(img.currentSrc || img.src)}" alt="${esc(img.alt)}">
+      <button type="button" class="lightbox-close" aria-label="닫기">×</button>`;
+    box.addEventListener("click", (e) => { if (e.target.tagName !== "IMG") close(); });
+    document.body.appendChild(box);
+    document.body.style.overflow = "hidden";
+    history.pushState({ zoom: true }, "");  // 휴대폰 뒤로가기 버튼으로 닫히게
+  }
+  document.addEventListener("click", (e) => {
+    const img = e.target.closest("img[data-zoom]");
+    if (img) open(img);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+    if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches("img[data-zoom]")) { e.preventDefault(); open(e.target); }
+  });
+  window.addEventListener("popstate", () => { if (box) { box.remove(); box = null; document.body.style.overflow = ""; } });
+}
+
 // ---- 시작 ----
 (async function init() {
   const page = document.body.dataset.page;
@@ -318,6 +349,7 @@ function renderWorship(church) {
     return;
   }
   renderChrome(church);
+  setupZoom();
   if (page === "about") return renderAbout(church);
   if (page === "worship") return renderWorship(church);
 

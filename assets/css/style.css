@@ -250,6 +250,18 @@ a:hover .thumb img { transform: scale(1.03); }
 .site-footer a { text-decoration: none; }
 .site-footer a:hover { text-decoration: underline; }
 
+/* 사진 크게 보기 */
+img[data-zoom] { cursor: zoom-in; }
+.lightbox {
+  position: fixed; inset: 0; z-index: 100; background: rgba(20, 14, 10, .92);
+  display: grid; place-items: center; padding: 16px; cursor: zoom-out;
+}
+.lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; cursor: default; }
+.lightbox-close {
+  position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border-radius: 50%;
+  border: 0; background: rgba(255, 255, 255, .9); color: var(--ink); font-size: 28px; line-height: 1; cursor: pointer;
+}
+
 .skeleton { background: linear-gradient(90deg, var(--surface-2), #fff, var(--surface-2)); background-size: 200% 100%; animation: sk 1.4s infinite; }
 @keyframes sk { to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } .thumb img { transition: none; } }
