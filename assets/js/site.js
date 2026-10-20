@@ -71,6 +71,7 @@ function renderChrome(church) {
     footer.innerHTML = `
       <div class="wrap">
         <div class="f-name"><img src="assets/img/logo.svg" alt="">${esc(church.name)}</div>
+        ${(church.alternateNames || []).length ? `<p>${esc(church.alternateNames.join(" · "))}</p>` : ""}
         <p>${denomHTML(church)}</p>
         <p>${esc(c.address || "")}</p>
         <p>${c.phone ? `전화 <a href="tel:${esc(c.phone.replace(/[^0-9+]/g, ""))}">${esc(c.phone)}</a>` : ""}

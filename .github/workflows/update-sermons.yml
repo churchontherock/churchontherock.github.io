@@ -68,11 +68,20 @@ jobs:
           git commit -m "설교 목록·썸네일 기록 자동 갱신"
           git push
 
+      - name: 완성 페이지 미리 만들기 (검색 로봇이 내용을 읽을 수 있게)
+        # 실패하면 원본 파일 그대로 배포한다(사이트가 멈추지 않게)
+        run: |
+          python scripts/prerender.py _site || {
+            echo "미리 만들기 실패 → 원본으로 배포"
+            rm -rf _site && mkdir _site
+            git ls-files | grep -vE '^(\.github|scripts)/' | while read f; do mkdir -p "_site/$(dirname "$f")"; cp "$f" "_site/$f"; done
+          }
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
   deploy:
     needs: build

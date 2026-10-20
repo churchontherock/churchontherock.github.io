@@ -15,3 +15,7 @@ Thumbs.db
 
 # 표정 모델은 자동 실행 때 받아 씀(저장소에 넣지 않음)
 scripts/face_landmarker.task
+
+# 배포 직전 미리 만든 완성 페이지(자동 생성)
+_site/
+.chrome-prerender/
