@@ -272,7 +272,11 @@ function renderAbout(church) {
   } else $("#pastor-section").remove();
 
   const staff = a.staff || [];
-  if (staff.length) $("#staff").innerHTML = staff.map((s) => `<div class="card"><small>${esc(s.role)}</small><b>${esc(s.name)}</b></div>`).join("");
+  // together: 한 칸에 나란히(담임목사·사모) — 가로로 넓은 카드
+  const person = (s) => `<div class="person"><small>${esc(s.role)}</small><b>${esc(s.name)}</b></div>`;
+  if (staff.length) $("#staff").innerHTML = staff.map((s) => s.together
+    ? `<div class="card wide">${s.together.map(person).join('<span class="sep"></span>')}</div>`
+    : `<div class="card">${person(s)}</div>`).join("");
   else $("#staff-section").remove();
 
   const hist = a.history || [];
