@@ -106,6 +106,19 @@ def main():
         srv.shutdown()
         shutil.rmtree(OUT.parent / ".chrome-prerender", ignore_errors=True)
 
+    # 3) 캐시 무효화: CSS·JS 주소에 이번 배포 버전(git 커밋)을 붙인다.
+    #    휴대폰 브라우저가 예전 디자인 파일을 붙잡고 있어도, 새 페이지는 새 주소로 받아 간다.
+    ver = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True,
+                         text=True).stdout.strip() or "dev"
+    for page in PAGES:
+        f = OUT / page
+        h = f.read_text(encoding="utf-8")
+        for asset in ("assets/css/style.css", "assets/js/site.js"):
+            h = h.replace(f'"{asset}"', f'"{asset}?v={ver}"')
+        f.write_text(h, encoding="utf-8")
+    print(f"캐시 버전 표시: v={ver}")
+
+
 
 if __name__ == "__main__":
     main()
