@@ -96,7 +96,7 @@
     "pastor": {
       "name": "서대일",
       "title": "담임목사",
-      "photo": "",
+      "photo": "assets/img/pastor.webp",
       "greeting": []
     },
     "staff": [

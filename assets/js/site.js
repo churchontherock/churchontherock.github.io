@@ -253,6 +253,10 @@ function renderAbout(church) {
   // 교회 소개 글: 머리말 + 비전 4가지 + 맺음말 (church.json about.welcome)
   const w = a.welcome || {};
   $("#about-lead").textContent = w.lead || "";
+  // 머리말 옆에 담임목사 사진을 작게(글이 사진을 감싸며 흐름)
+  const pp = a.pastor || {};
+  if (pp.photo) $("#lead-face").innerHTML = `<img src="${esc(pp.photo)}" alt="${esc(pp.name)} ${esc(pp.title || "")}" data-zoom tabindex="0" role="button" aria-label="담임목사 사진 크게 보기"><figcaption>${esc(pp.title || "담임목사")} <b>${esc(pp.name || "")}</b></figcaption>`;
+  else $("#lead-face").remove();
   $("#vision").innerHTML = (w.visions || []).map((v, i) =>
     `<li class="card"><span class="v-num">${i + 1}</span><div><h3>${esc(v.title)}</h3><p>${esc(v.text)}</p></div></li>`).join("");
   if (!(w.visions || []).length) $("#vision-section").remove();
@@ -264,7 +268,7 @@ function renderAbout(church) {
   const p = a.pastor || {};
   const greet = (p.greeting || []).filter(Boolean);
   const box = $("#pastor");
-  if (p.name && (p.photo || greet.length)) {  // 사진·인사말이 생기면 보인다(이름만으로는 섬기는 사람들과 중복)
+  if (p.name && greet.length) {  // 인사말이 생기면 보인다(사진은 머리말 옆에 이미 있음)
     box.classList.toggle("has-photo", !!p.photo);
     box.innerHTML = `${p.photo ? `<img src="${esc(p.photo)}" alt="${esc(p.name)} ${esc(p.title || "")}">` : ""}
       <div><div class="name">${esc(p.name)} ${esc(p.title || "")}</div>

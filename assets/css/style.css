@@ -314,3 +314,11 @@ h1, h2, h3 { color: var(--blue); }
   .staff { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 860px; }
   .staff .wide { grid-column: span 2; }
 }
+
+/* 머리말 옆 담임목사 사진: 한쪽(오른쪽)에 작게, 글이 감싸 흐르게 */
+.about-lead-wrap::after { content: ""; display: block; clear: both; }
+.lead-face { float: right; width: 112px; margin: 4px 0 8px 16px; text-align: center; }
+.lead-face img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow); }
+.lead-face figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+.lead-face figcaption b { display: block; font-size: 15px; color: var(--ink); font-family: var(--font-head); }
+@media (min-width: 900px) { .lead-face { width: 150px; margin-left: 22px; } }
