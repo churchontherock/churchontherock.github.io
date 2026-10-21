@@ -250,7 +250,13 @@ function renderSermons(church, sermons) {
 // ---- 교회 소개 ----
 function renderAbout(church) {
   const a = church.about || {};
-  $("#vision").innerHTML = (a.intro || []).map((l) => `<li>${esc(l)}</li>`).join("");
+  // 교회 소개 글: 머리말 + 비전 4가지 + 맺음말 (church.json about.welcome)
+  const w = a.welcome || {};
+  $("#about-lead").textContent = w.lead || "";
+  $("#vision").innerHTML = (w.visions || []).map((v, i) =>
+    `<li class="card"><span class="v-num">${i + 1}</span><div><h3>${esc(v.title)}</h3><p>${esc(v.text)}</p></div></li>`).join("");
+  if (!(w.visions || []).length) $("#vision-section").remove();
+  $("#about-closing").textContent = w.closing || "";
   $("#denom").innerHTML = church.denomination ? `${denomHTML(church)}에 속한 교회입니다.` : "";
   if (a.photo) $("#about-photo").innerHTML = `<img src="${esc(a.photo)}" alt="${esc(church.name)} 예배 모습" data-zoom tabindex="0" role="button" aria-label="예배 사진 크게 보기">`;
   else $("#about-photo").remove();
@@ -258,7 +264,7 @@ function renderAbout(church) {
   const p = a.pastor || {};
   const greet = (p.greeting || []).filter(Boolean);
   const box = $("#pastor");
-  if (p.name) {
+  if (p.name && (p.photo || greet.length)) {  // 사진·인사말이 생기면 보인다(이름만으로는 섬기는 사람들과 중복)
     box.classList.toggle("has-photo", !!p.photo);
     box.innerHTML = `${p.photo ? `<img src="${esc(p.photo)}" alt="${esc(p.name)} ${esc(p.title || "")}">` : ""}
       <div><div class="name">${esc(p.name)} ${esc(p.title || "")}</div>
@@ -270,7 +276,9 @@ function renderAbout(church) {
   else $("#staff-section").remove();
 
   const hist = a.history || [];
-  if (hist.length) $("#timeline").innerHTML = hist.map((h) => `<li><b>${esc(h.year)}</b>${esc(h.text)}</li>`).join("");
+  // 연혁: 연도별로 여러 줄 (items) — 예전 형식(text 한 줄)도 그대로 받는다
+  if (hist.length) $("#timeline").innerHTML = hist.map((h) =>
+    `<li><b class="t-year">${esc(h.year)}</b><ul>${(h.items || [h.text]).map((x) => `<li>${esc(x)}</li>`).join("")}</ul></li>`).join("");
   else $("#history-section").remove();
 }
 
