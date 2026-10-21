@@ -307,3 +307,10 @@ h1, h2, h3 { color: var(--blue); }
 .staff .wide { grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; gap: 28px; padding: 18px 16px; }
 .staff .wide b { font-size: 20px; }
 .staff .wide .sep { width: 1px; height: 36px; background: var(--line); }
+
+/* 섬기는 사람들: 휴대폰 2열(담임목사·사모 칸은 한 줄 전체), PC 는 한 줄에 전부(담임목사·사모 칸은 2칸 너비) */
+.staff { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 760px) {
+  .staff { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 860px; }
+  .staff .wide { grid-column: span 2; }
+}
