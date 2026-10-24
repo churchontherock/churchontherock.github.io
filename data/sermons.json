@@ -1,8 +1,20 @@
 {
- "updated": "2026-10-23T15:54:56Z",
+ "updated": "2026-10-24T15:17:25Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
- "count": 684,
+ "count": 685,
  "items": [
+  {
+   "id": "v6K7wAIFNvQ",
+   "title": "금요기도회 설교",
+   "display": "금요기도회 설교",
+   "sermonTitle": "",
+   "preacher": "",
+   "scripture": "",
+   "date": "2026-10-24",
+   "category": "주일설교",
+   "duration": 1452,
+   "live": false
+  },
   {
    "id": "lUKPbL7f-W4",
    "title": "반석위에세우신교회 금요기도회 (20261023)",
@@ -24,7 +36,7 @@
    "scripture": "",
    "date": "2026-10-23",
    "category": "금요기도회",
-   "duration": 3692,
+   "duration": 3674,
    "live": false
   },
   {
