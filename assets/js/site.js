@@ -275,6 +275,9 @@ function renderAbout(church) {
       ${greet.length ? `<div class="greeting" style="margin-top:12px">${greet.map((g) => `<p>${esc(g)}</p>`).join("")}</div>` : ""}</div>`;
   } else $("#pastor-section").remove();
 
+  // 섬기는 사람들 단체 사진(있으면 이름 카드 위에)
+  if (a.staffPhoto) $("#staff-photo").innerHTML = `<img src="${esc(a.staffPhoto)}" alt="섬기는 사람들" loading="lazy" data-zoom tabindex="0" role="button" aria-label="섬기는 사람들 사진 크게 보기">`;
+  else $("#staff-photo").remove();
   const staff = a.staff || [];
   // together: 한 칸에 나란히(담임목사·사모) — 가로로 넓은 카드
   const person = (s) => `<div class="person"><small>${esc(s.role)}</small><b>${esc(s.name)}</b></div>`;

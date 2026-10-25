@@ -322,3 +322,5 @@ h1, h2, h3 { color: var(--blue); }
 .lead-face figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
 .lead-face figcaption b { display: block; font-size: 15px; color: var(--ink); font-family: var(--font-head); }
 @media (min-width: 900px) { .lead-face { float: right; width: 150px; margin: 4px 0 8px 22px; } }  /* PC: 오른쪽 */
+.staff-photo { max-width: 860px; margin-bottom: 14px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.staff-photo img { width: 100%; aspect-ratio: 1200 / 706; object-fit: cover; }
