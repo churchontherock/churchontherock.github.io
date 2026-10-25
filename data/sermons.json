@@ -1,7 +1,7 @@
 {
- "updated": "2026-10-25T05:03:16Z",
+ "updated": "2026-10-25T08:56:22Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
- "count": 685,
+ "count": 687,
  "items": [
   {
    "id": "lUKPbL7f-W4",
@@ -13,6 +13,30 @@
    "date": "2026-10-25",
    "category": "주일예배",
    "duration": 4797,
+   "live": false
+  },
+  {
+   "id": "aYXi4OI0Zk8",
+   "title": "10월 25일 주일설교 (서대일 목사)",
+   "display": "주일설교",
+   "sermonTitle": "",
+   "preacher": "서대일 목사",
+   "scripture": "",
+   "date": "2026-10-25",
+   "category": "주일설교",
+   "duration": 1831,
+   "live": false
+  },
+  {
+   "id": "ZuVWgs_WyZE",
+   "title": "반석위에세우신교회 주일2부예배 (20261025)",
+   "display": "주일2부예배",
+   "sermonTitle": "",
+   "preacher": "",
+   "scripture": "",
+   "date": "2026-10-25",
+   "category": "주일예배",
+   "duration": null,
    "live": false
   },
   {
