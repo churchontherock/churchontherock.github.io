@@ -123,10 +123,10 @@ function renderHome(church, sermons) {
     $("#motto").innerHTML = `“${esc(church.motto.text)}”<cite>${esc(church.motto.ref || "")}</cite>`;
   }
 
-  // 이번 주 설교: homeCategory(주일예배)의 가장 최근 영상
+  // 이번 주 설교: homeCategories(주일설교·금요설교) 중 가장 최근 영상 → 주일 뒤엔 주일설교, 금요일 뒤엔 금요설교가 번갈아 올라온다
   const items = sermons.items || [];
-  const homeCat = church.sermons?.homeCategory;
-  const latest = items.find((v) => v.category === homeCat) || items[0];
+  const homeCats = church.sermons?.homeCategories || [church.sermons?.homeCategory];
+  const latest = items.find((v) => homeCats.includes(v.category)) || items[0];
   if (latest) {
     const f = $("#feature");
     f.href = ytUrl(latest.id);
@@ -179,7 +179,8 @@ function renderSermons(church, sermons) {
   const all = sermons.items || [];
   const pageSize = church.sermons?.pageSize || 12;
   // 탭: 실제 영상이 있는 분류만
-  const order = [...(church.sermons?.categories || []).map((c) => c.name), church.sermons?.otherCategory || "기타"];
+  // 탭 순서: tabOrder 가 있으면 그 순서(분류 판정 순서와 별개), 없으면 분류 순서
+  const order = [...(church.sermons?.tabOrder || (church.sermons?.categories || []).map((c) => c.name)), church.sermons?.otherCategory || "기타"];
   const cats = ["전체", ...order.filter((n) => all.some((v) => v.category === n))];
 
   const params = new URLSearchParams(location.search);

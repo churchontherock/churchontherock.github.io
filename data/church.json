@@ -231,8 +231,14 @@
   "sermons": {
     "cardStyle": "youtube",
     "pageSize": 12,
-    "homeCategory": "주일설교",
     "categories": [
+      {
+        "name": "금요설교",
+        "keywords": [
+          "금요기도회 설교",
+          "금요설교"
+        ]
+      },
       {
         "name": "주일설교",
         "keywords": [
@@ -278,6 +284,18 @@
         ]
       }
     ],
-    "otherCategory": "기타"
+    "otherCategory": "기타",
+    "homeCategories": [
+      "주일설교",
+      "금요설교"
+    ],
+    "tabOrder": [
+      "주일설교",
+      "금요설교",
+      "주일예배",
+      "금요기도회",
+      "새벽기도회",
+      "성경공부"
+    ]
   }
 }
