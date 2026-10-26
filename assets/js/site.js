@@ -106,9 +106,15 @@ function thumbHTML(v, church, big = false) {
   return `<div class="thumb"><img src="${src}" alt="" loading="${big ? "eager" : "lazy"}"${fallback}>${live}<span class="play"${big ? "" : ' style="width:46px;height:46px"'}></span>${dur}</div>`;
 }
 
+// 설교 제목 줄: "믿으면 보리라 (요11:30-44)" — 설교 제목이 없으면 영상 종류(주일2부예배 등)
+function heading(v) {
+  if (!v.sermonTitle) return v.display;
+  return v.scripture ? `${v.sermonTitle} (${v.scripture})` : v.sermonTitle;
+}
+
 function cardHTML(v, church) {
-  const title = v.sermonTitle || v.display;
-  const sub = [fmtDate(v.date), v.sermonTitle ? v.display : "", v.scripture, v.preacher].filter(Boolean).join(" · ");
+  const title = heading(v);
+  const sub = [fmtDate(v.date), v.sermonTitle ? v.display : "", v.preacher].filter(Boolean).join(" · ");
   return `<a class="card s-card" href="${ytUrl(v.id)}" target="_blank" rel="noopener" title="${esc(v.title)}">
       ${thumbHTML(v, church)}
       <div class="meta"><div class="cat">${esc(v.category)}</div><h3>${esc(title)}</h3><div class="sub">${esc(sub)}</div></div>
@@ -132,8 +138,8 @@ function renderHome(church, sermons) {
     f.href = ytUrl(latest.id);
     f.innerHTML = `${thumbHTML(latest, church, true)}
       <div class="meta"><div class="eyebrow">이번 주 ${esc(latest.category)}</div>
-        <h2>${esc(latest.sermonTitle || latest.display)}</h2>
-        <p>${esc([latest.scripture, latest.preacher, fmtDate(latest.date)].filter(Boolean).join(" · "))} · 누르면 유튜브에서 열립니다</p></div>`;
+        <h2>${esc(heading(latest))}</h2>
+        <p>${esc([latest.preacher, fmtDate(latest.date)].filter(Boolean).join(" · "))} · 누르면 유튜브에서 열립니다</p></div>`;
   }
 
   // 예배 시간 요약: 모든 예배를 한 줄씩

@@ -18,6 +18,9 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from bible_ref import find_scripture, find_title  # 설교 제목·본문(약어) 읽기
+
 ROOT = Path(__file__).resolve().parent.parent
 CHURCH_JSON = ROOT / "data" / "church.json"
 SERMONS_JSON = ROOT / "data" / "sermons.json"
@@ -25,6 +28,7 @@ SERMONS_JSON = ROOT / "data" / "sermons.json"
 # 날짜를 제목에서 못 찾은 새 영상은 영상 페이지를 하나씩 열어 게시일을 확인한다.
 # 한 번 실행에 너무 많이 열면 느려지므로 상한을 둔다(남은 건 다음 날 실행에서 처리).
 MAX_DATE_LOOKUPS = 40
+MAX_DESC_LOOKUPS = 20  # 설명란 개별 조회 상한(실행당)
 
 
 # ---- 1. 영상 목록 읽기 ----
@@ -76,12 +80,28 @@ def list_with_rss(channel_id):
         if not vid:
             continue
         published = entry.findtext("a:published", namespaces=ns) or ""
+        group = entry.find("{http://search.yahoo.com/mrss/}group")
+        desc = group.findtext("{http://search.yahoo.com/mrss/}description") if group is not None else ""
         out[vid] = {
             "id": vid,
             "title": (entry.findtext("a:title", namespaces=ns) or "").strip(),
             "published": published[:10],  # 2026-10-18T02:00:00+00:00 → 2026-10-18
+            "desc": desc or "",
         }
     return out
+
+
+def lookup_description(video_id):
+    """영상 한 개의 설명란. 전도사님이 설명란에 설교 제목·본문을 적어 두신다. 실패하면 None."""
+    try:
+        res = subprocess.run(
+            [sys.executable, "-X", "utf8", "-m", "yt_dlp", "--skip-download", "--no-warnings",
+             "--print", "%(description)s", f"https://www.youtube.com/watch?v={video_id}"],
+            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120,
+        )
+        return res.stdout if res.returncode == 0 else None
+    except Exception:
+        return None
 
 
 def lookup_upload_date(video_id):
@@ -195,6 +215,8 @@ def main():
 
     items = []
     lookups = 0
+    desc_lookups = 0
+    title_cats = set(cfg.get("titleCategories", ["주일설교", "금요설교"]))  # 설명란을 읽을 분류
     for vid in ids:
         prev = old.get(vid, {})
         src = (listed or {}).get(vid) or {}
@@ -204,6 +226,23 @@ def main():
             lookups += 1
             date = lookup_upload_date(vid)
         display, sermon_title, preacher, scripture = clean_title(title, church_name)
+        scripture = find_scripture(title) or ""          # 본문은 약어(요11:30-44)로 통일
+        cat = categorize(title, categories, other)
+        # 설교 영상인데 제목에 설교 제목·본문이 없으면 → 설명란에서 읽는다(한 번 읽은 영상은 기록해 두고 다시 안 읽음)
+        desc_checked = prev.get("descChecked", False)
+        if cat in title_cats and not (sermon_title and scripture):
+            if desc_checked:
+                sermon_title = sermon_title or prev.get("sermonTitle", "")
+                scripture = scripture or prev.get("scripture", "")
+            else:
+                desc = rss.get(vid, {}).get("desc")
+                if not desc and desc_lookups < MAX_DESC_LOOKUPS:
+                    desc_lookups += 1
+                    desc = lookup_description(vid)
+                if desc is not None:
+                    sermon_title = sermon_title or find_title(desc)
+                    scripture = scripture or find_scripture(desc)
+                    desc_checked = True
         items.append({
             "id": vid,
             "title": title,
@@ -212,9 +251,10 @@ def main():
             "preacher": preacher,
             "scripture": scripture,
             "date": date,
-            "category": categorize(title, categories, other),
+            "category": cat,
             "duration": src.get("duration") or prev.get("duration"),
             "live": bool(src.get("live")),
+            **({"descChecked": True} if desc_checked else {}),
         })
 
     # 최신순 정렬(날짜 없는 영상은 맨 뒤)
