@@ -29,6 +29,8 @@ SERMONS_JSON = ROOT / "data" / "sermons.json"
 # 한 번 실행에 너무 많이 열면 느려지므로 상한을 둔다(남은 건 다음 날 실행에서 처리).
 MAX_DATE_LOOKUPS = 40
 MAX_DESC_LOOKUPS = 20  # 설명란 개별 조회 상한(실행당)
+from datetime import date as _date, timedelta as _td
+RECHECK_SINCE = (_date.today() - _td(days=14)).isoformat()  # 이 날짜 이후 영상은 제목을 못 찾으면 매일 다시 읽음
 
 
 # ---- 1. 영상 목록 읽기 ----
@@ -230,6 +232,9 @@ def main():
         cat = categorize(title, categories, other)
         # 설교 영상인데 제목에 설교 제목·본문이 없으면 → 설명란에서 읽는다(한 번 읽은 영상은 기록해 두고 다시 안 읽음)
         desc_checked = prev.get("descChecked", False)
+        # 최근 2주 영상인데 아직 제목·본문을 못 찾았으면 다시 읽는다(설명란을 나중에 채우는 경우)
+        if desc_checked and not (prev.get("sermonTitle") and prev.get("scripture")) and date >= RECHECK_SINCE:
+            desc_checked = False
         if cat in title_cats and not (sermon_title and scripture):
             if desc_checked:
                 sermon_title = sermon_title or prev.get("sermonTitle", "")
