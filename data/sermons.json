@@ -1,7 +1,7 @@
 {
- "updated": "2026-10-26T23:42:25Z",
+ "updated": "2026-10-27T00:11:35Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
- "count": 686,
+ "count": 687,
  "items": [
   {
    "id": "lUKPbL7f-W4",
@@ -27,6 +27,18 @@
    "duration": 1831,
    "live": false,
    "descChecked": true
+  },
+  {
+   "id": "ZuVWgs_WyZE",
+   "title": "반석위에세우신교회 주일2부예배 (20261025)",
+   "display": "주일2부예배",
+   "sermonTitle": "",
+   "preacher": "",
+   "scripture": "",
+   "date": "2026-10-25",
+   "category": "주일예배",
+   "duration": null,
+   "live": false
   },
   {
    "id": "v6K7wAIFNvQ",
