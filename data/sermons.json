@@ -1,8 +1,20 @@
 {
- "updated": "2026-10-27T00:11:35Z",
+ "updated": "2026-10-30T15:41:51Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
  "count": 687,
  "items": [
+  {
+   "id": "ZuVWgs_WyZE",
+   "title": "반석위에세우신교회 금요기도회 (20261030)",
+   "display": "금요기도회",
+   "sermonTitle": "",
+   "preacher": "",
+   "scripture": "",
+   "date": "2026-10-30",
+   "category": "금요기도회",
+   "duration": 3976,
+   "live": false
+  },
   {
    "id": "lUKPbL7f-W4",
    "title": "반석위에세우신교회 주일2부예배 (20261025)",
@@ -27,18 +39,6 @@
    "duration": 1831,
    "live": false,
    "descChecked": true
-  },
-  {
-   "id": "ZuVWgs_WyZE",
-   "title": "반석위에세우신교회 주일2부예배 (20261025)",
-   "display": "주일2부예배",
-   "sermonTitle": "",
-   "preacher": "",
-   "scripture": "",
-   "date": "2026-10-25",
-   "category": "주일예배",
-   "duration": null,
-   "live": false
   },
   {
    "id": "v6K7wAIFNvQ",
