@@ -165,6 +165,7 @@ function renderHome(church, sermons) {
   $("#visit-short").innerHTML = `
     <div><div class="eyebrow">오시는 길</div><h3 style="font-size:20px;margin:4px 0 6px">${esc(c.address)}</h3>
     <p style="margin:0;color:var(--muted)">${esc(c.transit || "")}</p>
+    ${c.parking ? `<p style="margin:4px 0 0;color:var(--muted)">주차: ${esc(c.parking)}</p>` : ""}
     <div class="btn-row" style="margin-top:14px">
       ${c.naverMap ? `<a class="btn" href="${esc(c.naverMap)}" target="_blank" rel="noopener">네이버 지도</a>` : ""}
       ${c.kakaoMap ? `<a class="btn" href="${esc(c.kakaoMap)}" target="_blank" rel="noopener">카카오맵</a>` : ""}
@@ -322,6 +323,7 @@ function renderWorship(church) {
       <dl>
         <dt>주소</dt><dd>${esc(c.address)}</dd>
         ${c.transit ? `<dt>교통</dt><dd>${esc(c.transit)}</dd>` : ""}
+        ${c.parking ? `<dt>주차</dt><dd>${esc(c.parking)}</dd>` : ""}
         ${c.phone ? `<dt>전화</dt><dd><a href="tel:${esc(tel)}">${esc(c.phone)}</a></dd>` : ""}
         ${c.email ? `<dt>이메일</dt><dd><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></dd>` : ""}
       </dl>
