@@ -1,7 +1,7 @@
 {
- "updated": "2026-10-30T15:41:51Z",
+ "updated": "2026-10-31T03:40:47Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
- "count": 687,
+ "count": 688,
  "items": [
   {
    "id": "ZuVWgs_WyZE",
@@ -12,7 +12,7 @@
    "scripture": "",
    "date": "2026-10-30",
    "category": "금요기도회",
-   "duration": 3976,
+   "duration": 3977,
    "live": false
   },
   {
@@ -42,13 +42,13 @@
   },
   {
    "id": "v6K7wAIFNvQ",
-   "title": "금요기도회 설교",
-   "display": "금요기도회 설교",
+   "title": "10월 23일 금요기도회설교 (서대일 목사)",
+   "display": "금요기도회설교",
    "sermonTitle": "죄는 예속이다 1",
-   "preacher": "",
+   "preacher": "서대일 목사",
    "scripture": "민11:4-6, 10-20",
    "date": "2026-10-24",
-   "category": "금요설교",
+   "category": "주일설교",
    "duration": 1452,
    "live": false,
    "descChecked": true
@@ -79,11 +79,11 @@
   },
   {
    "id": "PTA_m8gE9gs",
-   "title": "10월 18일 주일설교 \"하나님의 일을 나타내시다\" (요한복음 9:1-12) - 서대일 목사",
+   "title": "10월 18일 주일설교 (서대일 목사)",
    "display": "주일설교",
-   "sermonTitle": "하나님의 일을 나타내시다",
+   "sermonTitle": "",
    "preacher": "서대일 목사",
-   "scripture": "요9:1-12",
+   "scripture": "",
    "date": "2026-10-18",
    "category": "주일설교",
    "duration": 1634,
@@ -8267,6 +8267,18 @@
    "date": "2020-06-13",
    "category": "성경공부",
    "duration": 2410,
+   "live": false
+  },
+  {
+   "id": "Ss0v1ejJ4LU",
+   "title": "10월 30일 금요기도회설교 (서대일 목사)",
+   "display": "금요기도회설교",
+   "sermonTitle": "",
+   "preacher": "서대일 목사",
+   "scripture": "",
+   "date": "",
+   "category": "주일설교",
+   "duration": 1517,
    "live": false
   }
  ]
