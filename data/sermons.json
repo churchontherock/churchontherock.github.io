@@ -1,8 +1,21 @@
 {
- "updated": "2026-11-01T05:19:17Z",
+ "updated": "2026-11-01T15:25:17Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
- "count": 689,
+ "count": 690,
  "items": [
+  {
+   "id": "7v-yNaV5ILU",
+   "title": "11월 1일 주일설교 (함께드리는추수감사예배 서대일 목사)",
+   "display": "주일설교 (함께드리는추수감사예배",
+   "sermonTitle": "한 사람을 찾습니다",
+   "preacher": "서대일 목사",
+   "scripture": "눅17:11-19",
+   "date": "2026-11-01",
+   "category": "주일설교",
+   "duration": 1497,
+   "live": false,
+   "descChecked": true
+  },
   {
    "id": "5VHpTBKsGMg",
    "title": "반석위에세우신교회 주일2부예배 (20261101)",
