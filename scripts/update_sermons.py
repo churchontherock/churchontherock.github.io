@@ -145,6 +145,19 @@ def date_from_title(title):
     return ""
 
 
+def date_from_month_day(title, fallback):
+    """'10월 30일 금요기도회설교' 처럼 연도 없이 월·일만 적힌 제목. 연도는 올린 날(fallback)에서 가져온다.
+    금요 설교를 토요일에 올리면 올린 날이 하루 늦으므로, 제목의 날짜가 실제 설교한 날이다."""
+    m = re.search(r"(?<!\d)(\d{1,2})\s*월\s*(\d{1,2})\s*일", title)
+    if not m or not fallback:
+        return ""
+    up = datetime.strptime(fallback, "%Y-%m-%d")
+    d = valid_date(up.year, *m.groups())
+    if d and d > fallback:                         # 12월 31일 설교를 1월에 올린 경우 → 전년도
+        d = valid_date(up.year - 1, *m.groups())
+    return d
+
+
 def clean_title(title, church_name):
     """화면에 보일 짧은 제목과, 제목 안에 적힌 설교 제목·본문·설교자를 따로 뽑는다.
     권장 유튜브 제목: 10월 18일 주일설교 "하나님의 일을 나타내시다" (요한복음 9:1-12) - 서대일 목사
@@ -181,8 +194,9 @@ def clean_title(title, church_name):
 
 def categorize(title, categories, other):
     """church.json 의 키워드 순서대로 처음 맞는 분류를 고른다."""
+    compact = title.replace(" ", "")   # '금요기도회설교'·'금요기도회 설교' 처럼 띄어쓰기가 달라도 같은 분류
     for c in categories:
-        if any(k in title for k in c.get("keywords", [])):
+        if any(k.replace(" ", "") in compact for k in c.get("keywords", [])):
             return c["name"]
     return other
 
@@ -227,6 +241,7 @@ def main():
         if not date and lookups < MAX_DATE_LOOKUPS:
             lookups += 1
             date = lookup_upload_date(vid)
+        date = date_from_title(title) or date_from_month_day(title, date) or date
         display, sermon_title, preacher, scripture = clean_title(title, church_name)
         scripture = find_scripture(title) or ""          # 본문은 약어(요11:30-44)로 통일
         cat = categorize(title, categories, other)

@@ -4,19 +4,6 @@
  "count": 688,
  "items": [
   {
-   "id": "Ss0v1ejJ4LU",
-   "title": "10월 30일 금요기도회설교 (서대일 목사)",
-   "display": "금요기도회설교",
-   "sermonTitle": "죄는 예속이다 2",
-   "preacher": "서대일 목사",
-   "scripture": "민11:4-6, 10-20, 31-34",
-   "date": "2026-10-31",
-   "category": "주일설교",
-   "duration": 1517,
-   "live": false,
-   "descChecked": true
-  },
-  {
    "id": "ZuVWgs_WyZE",
    "title": "반석위에세우신교회 금요기도회 (20261030)",
    "display": "금요기도회",
@@ -27,6 +14,19 @@
    "category": "금요기도회",
    "duration": 3977,
    "live": false
+  },
+  {
+   "id": "Ss0v1ejJ4LU",
+   "title": "10월 30일 금요기도회설교 (서대일 목사)",
+   "display": "금요기도회설교",
+   "sermonTitle": "죄는 예속이다 2",
+   "preacher": "서대일 목사",
+   "scripture": "민11:4-6, 10-20, 31-34",
+   "date": "2026-10-30",
+   "category": "금요설교",
+   "duration": 1517,
+   "live": false,
+   "descChecked": true
   },
   {
    "id": "lUKPbL7f-W4",
@@ -60,8 +60,8 @@
    "sermonTitle": "죄는 예속이다 1",
    "preacher": "서대일 목사",
    "scripture": "민11:4-6, 10-20",
-   "date": "2026-10-24",
-   "category": "주일설교",
+   "date": "2026-10-23",
+   "category": "금요설교",
    "duration": 1452,
    "live": false,
    "descChecked": true
@@ -6835,7 +6835,7 @@
    "sermonTitle": "",
    "preacher": "",
    "scripture": "행2:1-13",
-   "date": "2021-05-01",
+   "date": "2021-04-30",
    "category": "금요기도회",
    "duration": 2019,
    "live": false
@@ -6943,7 +6943,7 @@
    "sermonTitle": "",
    "preacher": "",
    "scripture": "사53:1-6",
-   "date": "2021-04-03",
+   "date": "2021-04-02",
    "category": "금요기도회",
    "duration": 1788,
    "live": false
