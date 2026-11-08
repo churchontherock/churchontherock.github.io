@@ -1,8 +1,21 @@
 {
- "updated": "2026-11-08T05:21:21Z",
+ "updated": "2026-11-08T15:26:20Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
- "count": 690,
+ "count": 691,
  "items": [
+  {
+   "id": "yABtclfATkw",
+   "title": "11월 8일 주일설교 (서대일목사)",
+   "display": "주일설교",
+   "sermonTitle": "내게 있는 이것을 네게 주노니",
+   "preacher": "서대일 목사",
+   "scripture": "행3:1-10",
+   "date": "2026-11-08",
+   "category": "주일설교",
+   "duration": 1867,
+   "live": false,
+   "descChecked": true
+  },
   {
    "id": "Az_KKkelYRI",
    "title": "반석위에세우신교회 주일2부예배 (20261108)",
