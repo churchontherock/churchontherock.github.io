@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-09T15:50:15Z",
+ "updated": "2026-11-10T15:37:11Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
  "count": 691,
  "items": [
@@ -7541,7 +7541,8 @@
    "date": "2020-11-22",
    "category": "주일설교",
    "duration": 2789,
-   "live": false
+   "live": false,
+   "descChecked": true
   },
   {
    "id": "IuDnAnmZABc",
@@ -7565,7 +7566,8 @@
    "date": "2020-11-15",
    "category": "주일설교",
    "duration": 2175,
-   "live": false
+   "live": false,
+   "descChecked": true
   },
   {
    "id": "XUWZFLTg7jk",
@@ -7674,7 +7676,8 @@
    "date": "2020-10-25",
    "category": "주일설교",
    "duration": 2782,
-   "live": false
+   "live": false,
+   "descChecked": true
   },
   {
    "id": "N8ZWMaqZQ_I",
