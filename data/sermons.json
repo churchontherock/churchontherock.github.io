@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-10T15:37:11Z",
+ "updated": "2026-11-15T05:25:50Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
- "count": 691,
+ "count": 692,
  "items": [
   {
    "id": "yABtclfATkw",
@@ -8322,6 +8322,18 @@
    "date": "2020-06-13",
    "category": "성경공부",
    "duration": 2410,
+   "live": false
+  },
+  {
+   "id": "vksKZ9-WZZk",
+   "title": "11월 15일 주일설교 (서대일목사)",
+   "display": "주일설교",
+   "sermonTitle": "",
+   "preacher": "서대일 목사",
+   "scripture": "",
+   "date": "",
+   "category": "주일설교",
+   "duration": 1423,
    "live": false
   }
  ]
