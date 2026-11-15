@@ -1,8 +1,45 @@
 {
- "updated": "2026-11-15T05:25:50Z",
+ "updated": "2026-11-15T15:29:37Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
- "count": 692,
+ "count": 694,
  "items": [
+  {
+   "id": "vksKZ9-WZZk",
+   "title": "11월 15일 주일설교 (서대일목사)",
+   "display": "주일설교",
+   "sermonTitle": "일어나 걷는지라",
+   "preacher": "서대일 목사",
+   "scripture": "행14:8-18",
+   "date": "2026-11-15",
+   "category": "주일설교",
+   "duration": 1423,
+   "live": false,
+   "descChecked": true
+  },
+  {
+   "id": "YontLNAMdaE",
+   "title": "반석위에세우신교회 주일2부예배 (20261115)",
+   "display": "주일2부예배",
+   "sermonTitle": "",
+   "preacher": "",
+   "scripture": "",
+   "date": "2026-11-15",
+   "category": "주일예배",
+   "duration": null,
+   "live": false
+  },
+  {
+   "id": "DUgIF0_wxjM",
+   "title": "반석위에세우신교회 주일2부예배 (20261115)",
+   "display": "주일2부예배",
+   "sermonTitle": "",
+   "preacher": "",
+   "scripture": "",
+   "date": "2026-11-15",
+   "category": "주일예배",
+   "duration": 4341,
+   "live": false
+  },
   {
    "id": "yABtclfATkw",
    "title": "11월 8일 주일설교 (서대일목사)",
@@ -8322,18 +8359,6 @@
    "date": "2020-06-13",
    "category": "성경공부",
    "duration": 2410,
-   "live": false
-  },
-  {
-   "id": "vksKZ9-WZZk",
-   "title": "11월 15일 주일설교 (서대일목사)",
-   "display": "주일설교",
-   "sermonTitle": "",
-   "preacher": "서대일 목사",
-   "scripture": "",
-   "date": "",
-   "category": "주일설교",
-   "duration": 1423,
    "live": false
   }
  ]
