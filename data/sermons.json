@@ -1,8 +1,32 @@
 {
- "updated": "2026-11-16T16:32:44Z",
+ "updated": "2026-11-22T05:28:04Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
- "count": 694,
+ "count": 695,
  "items": [
+  {
+   "id": "rwg1nMtY-RM",
+   "title": "반석위에세우신교회 주일2부예배 (20261122)",
+   "display": "주일2부예배",
+   "sermonTitle": "",
+   "preacher": "",
+   "scripture": "",
+   "date": "2026-11-22",
+   "category": "주일예배",
+   "duration": null,
+   "live": false
+  },
+  {
+   "id": "YontLNAMdaE",
+   "title": "반석위에세우신교회 주일2부예배 (20261122)",
+   "display": "주일2부예배",
+   "sermonTitle": "",
+   "preacher": "",
+   "scripture": "",
+   "date": "2026-11-22",
+   "category": "주일예배",
+   "duration": 4633,
+   "live": false
+  },
   {
    "id": "vksKZ9-WZZk",
    "title": "11월 15일 주일설교 (서대일목사)",
@@ -15,18 +39,6 @@
    "duration": 1423,
    "live": false,
    "descChecked": true
-  },
-  {
-   "id": "YontLNAMdaE",
-   "title": "반석위에세우신교회 주일2부예배 (20261115)",
-   "display": "주일2부예배",
-   "sermonTitle": "",
-   "preacher": "",
-   "scripture": "",
-   "date": "2026-11-15",
-   "category": "주일예배",
-   "duration": null,
-   "live": false
   },
   {
    "id": "DUgIF0_wxjM",
