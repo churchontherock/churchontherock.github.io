@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-22T05:28:04Z",
+ "updated": "2026-11-22T09:00:47Z",
  "channelId": "UC2W5U4KT50FQC6BF-nWEsOg",
- "count": 695,
+ "count": 696,
  "items": [
   {
    "id": "rwg1nMtY-RM",
@@ -26,6 +26,19 @@
    "category": "주일예배",
    "duration": 4633,
    "live": false
+  },
+  {
+   "id": "F08hx67h3XM",
+   "title": "11월 22일 주일설교 (송영민목사)",
+   "display": "주일설교",
+   "sermonTitle": "행복을 찾아서",
+   "preacher": "송영민 목사",
+   "scripture": "신10:12-22",
+   "date": "2026-11-22",
+   "category": "주일설교",
+   "duration": 1895,
+   "live": false,
+   "descChecked": true
   },
   {
    "id": "vksKZ9-WZZk",
